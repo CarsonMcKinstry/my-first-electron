@@ -42,6 +42,7 @@ export class TextureManager {
     destinationRect: Rect,
     flip: boolean
   ) {
+    // TODO: figure out how to properly crop these images
     context.drawImage(texture, destinationRect.x, destinationRect.y);
   }
 }

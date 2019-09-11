@@ -78,11 +78,11 @@ export class Game {
         chopperEntity,
         this.buffer,
         {
-          id: "",
+          id: "chopper-image",
           numFrames: 2,
           animationSpeed: 90,
           isFixed: false,
-          hasDirections: false
+          hasDirections: true
         }
       )
     );
