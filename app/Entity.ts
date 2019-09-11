@@ -2,49 +2,52 @@ import { Component } from "./Component";
 import { EntityManager } from "./EntityManager";
 
 export class Entity {
-  private _isActive: boolean;
-  private components: Map<string, Component> = new Map();
+    private _isActive: boolean;
+    private components: Map<string, Component> = new Map();
 
-  constructor(private manager: EntityManager, private readonly _name?: string) {
-    this._isActive = true;
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  public update(deltaTime: number): void {
-    for (const component of this.components.values()) {
-      component.update(deltaTime);
+    constructor(
+        private manager: EntityManager,
+        private readonly _name?: string
+    ) {
+        this._isActive = true;
     }
-  }
-  public render(context: CanvasRenderingContext2D): void {
-    for (const component of this.components.values()) {
-      component.render(context);
+
+    get name() {
+        return this._name;
     }
-  }
-  public destroy(): void {
-    this._isActive = false;
-  }
 
-  public get isActive(): boolean {
-    return this._isActive;
-  }
+    public update(deltaTime: number, currentTime: number): void {
+        for (const component of this.components.values()) {
+            component.update(deltaTime, currentTime);
+        }
+    }
+    public render(context: CanvasRenderingContext2D): void {
+        for (const component of this.components.values()) {
+            component.render(context);
+        }
+    }
+    public destroy(): void {
+        this._isActive = false;
+    }
 
-  public addComponent<C extends Component>(name: string, component: C): C {
-    this.components.set(name, component);
+    public get isActive(): boolean {
+        return this._isActive;
+    }
 
-    component.intialize();
+    public addComponent<C extends Component>(name: string, component: C): C {
+        this.components.set(name, component);
 
-    return component;
-  }
+        component.intialize();
 
-  public getComponent<C extends Component>(componentId: string): C {
-    // @ts-ignore
-    return this.components.get(componentId);
-  }
+        return component;
+    }
 
-  public hasComponent(componentId: string): boolean {
-    return this.components.has(componentId);
-  }
+    public getComponent<C extends Component>(componentId: string): C {
+        // @ts-ignore
+        return this.components.get(componentId);
+    }
+
+    public hasComponent(componentId: string): boolean {
+        return this.components.has(componentId);
+    }
 }
