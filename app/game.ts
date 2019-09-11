@@ -50,8 +50,11 @@ export class Game {
             "chopper-spritesheet.png"
         );
 
+        await this.assetManager.addTexture("radar-image", "radar.png");
+
         const tankEntity = this.entityManager.addEntity("tank");
         const chopperEntity = this.entityManager.addEntity("chopper");
+        const radarEntity = this.entityManager.addEntity("radar");
 
         tankEntity.addComponent(
             "transform",
@@ -96,6 +99,27 @@ export class Game {
                 "RightAnimation",
                 "ShootAnimation",
                 chopperEntity
+            )
+        );
+
+        radarEntity.addComponent(
+            "transform",
+            new TransformComponent(this.width - 72, 8, 0, 0, 64, 64, 1)
+        );
+        radarEntity.addComponent(
+            "sprite",
+            new SpriteComponent(
+                "radar-image",
+                this.assetManager,
+                radarEntity,
+                this.buffer,
+                {
+                    id: "radar-image",
+                    numFrames: 8,
+                    animationSpeed: 180,
+                    isFixed: false,
+                    hasDirections: false
+                }
             )
         );
     }
