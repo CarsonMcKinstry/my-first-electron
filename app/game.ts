@@ -1,3 +1,4 @@
+import { KeyboardControl } from "./Components/KeyboardControlComponent";
 import { TransformComponent } from "./Components/TransformComponent";
 import { buildGrid } from "./canvas";
 import { ipcRenderer } from "electron";
@@ -84,6 +85,17 @@ export class Game {
                     isFixed: false,
                     hasDirections: true
                 }
+            )
+        );
+        chopperEntity.addComponent(
+            "keyboardControl",
+            new KeyboardControl(
+                "UpAnimation",
+                "DownAnimation",
+                "LeftAnimation",
+                "RightAnimation",
+                "ShootAnimation",
+                chopperEntity
             )
         );
     }
