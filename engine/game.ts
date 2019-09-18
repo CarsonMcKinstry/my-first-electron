@@ -1,7 +1,9 @@
-import { fromEvent, merge, Subscription } from "rxjs";
+import { AssetManager } from "./../app/AssetManager";
+import { fromEvent, merge, Subscription, Observable } from "rxjs";
 import { filter, tap } from "rxjs/operators";
 import { Canvas } from "./types";
-import { ipcRenderer } from "electron";
+import { EntityManager } from "./managers/EntityManager";
+// import { ipcRenderer } from "electron";
 
 export class Game {
   private _isRunning: boolean = false;
@@ -14,11 +16,15 @@ export class Game {
 
   private keyboardListener?: Subscription;
 
+  private entityManager: EntityManager = new EntityManager();
+  private assetManager: AssetManager = new AssetManager();
+
   constructor(
     private root: HTMLElement,
     public readonly width: number,
     public readonly height: number,
-    private readonly frameTargetTime: number
+    private readonly frameTargetTime: number,
+    private readonly onQuit: () => void
   ) {
     const buffer = this.createCanvas(width, height);
     this.bufferContext = buffer.context;
@@ -50,10 +56,10 @@ export class Game {
 
   public start() {
     this.root.appendChild(this.gameBoard);
+    this.createKeyboardListener();
 
     this._isRunning = true;
     requestAnimationFrame(this.gameLoop);
-    this.createInputProcessor();
   }
 
   private calculateDeltaTime(ticks: number) {
@@ -77,13 +83,13 @@ export class Game {
 
   private update() {
     setTimeout(() => {
-      // run updates
+      this.entityManager.update(this.deltaTime, this.lastTicks);
     }, this.frameTargetTime);
   }
 
-  private createInputProcessor() {
+  private createKeyboardListener() {
     if (this.keyboardListener) {
-      return;
+      this.keyboardListener.unsubscribe();
     }
 
     const keydowns = fromEvent<KeyboardEvent>(document, "keydown");
@@ -94,7 +100,7 @@ export class Game {
         this._isRunning = false;
       }),
       tap(() => {
-        ipcRenderer.send("quit");
+        this.onQuit();
       }),
       tap(() => {
         if (this.keyboardListener) {
@@ -109,6 +115,12 @@ export class Game {
   private render() {
     this.bufferContext.clearRect(0, 0, this.width, this.height);
     this.gameBoardContext.clearRect(0, 0, this.width, this.height);
+
+    if (this.entityManager.hasNoEntities) {
+      return;
+    } else {
+      this.entityManager.render(this.bufferContext);
+    }
 
     this.gameBoardContext.drawImage(this.buffer, 0, 0);
   }
