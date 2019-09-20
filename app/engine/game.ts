@@ -1,9 +1,13 @@
-import { AssetManager } from "./../app/AssetManager";
+// import { KeyboardControl } from './../Components/KeyboardControlComponent';
+import { TransformComponent } from "./Components/TransformComponent";
+import { KeyboardControl } from "./Components/KeyboardControlComponent";
+import { SpriteComponent } from "./Components/SpriteComponent";
+import { AssetManager } from "./managers/AssetManager";
 import { fromEvent, merge, Subscription, Observable } from "rxjs";
 import { filter, tap } from "rxjs/operators";
 import { Canvas } from "./types";
 import { EntityManager } from "./managers/EntityManager";
-// import { ipcRenderer } from "electron";
+import { Vector } from "./primitives/Vector";
 
 export class Game {
   private _isRunning: boolean = false;
@@ -17,15 +21,17 @@ export class Game {
   private keyboardListener?: Subscription;
 
   private entityManager: EntityManager = new EntityManager();
-  private assetManager: AssetManager = new AssetManager();
+  private assetManager: AssetManager;
 
   constructor(
-    private root: HTMLElement,
+    // private root: HTMLElement,
     public readonly width: number,
     public readonly height: number,
+    private readonly assetBase: string,
     private readonly frameTargetTime: number,
     private readonly onQuit: () => void
   ) {
+    this.assetManager = new AssetManager(assetBase);
     const buffer = this.createCanvas(width, height);
     this.bufferContext = buffer.context;
     this.buffer = buffer.canvas;
@@ -50,13 +56,45 @@ export class Game {
     } as Canvas;
   }
 
+  public async loadLevel(level: number) {
+    await this.assetManager.addTexture(
+      "chopper-image",
+      "chopper-spritesheet.png"
+    );
+    const chopperEntity = this.entityManager.addEntity("chopper");
+
+    chopperEntity.addComponent(
+      new TransformComponent(new Vector(240, 106), new Vector(0, 0), 32, 32, 1)
+    );
+    chopperEntity.addComponent(
+      new SpriteComponent(
+        chopperEntity,
+        "chopper-image",
+        this.assetManager,
+        this.bufferContext,
+        {
+          id: "chopper-image",
+          numFrames: 2,
+          animationSpeed: 90,
+          isFixed: false,
+          hasDirections: true,
+          animationNames: ["DOWN", "RIGHT", "LEFT", "UP"]
+        }
+      )
+    );
+    chopperEntity.addComponent(
+      new KeyboardControl("UP", "DOWN", "LEFT", "RIGHT", chopperEntity)
+    );
+  }
+
   public get isRunning() {
     return this._isRunning;
   }
 
-  public start() {
-    this.root.appendChild(this.gameBoard);
+  public initialize(root: HTMLElement) {
+    root.appendChild(this.gameBoard);
     this.createKeyboardListener();
+    this.loadLevel(1);
 
     this._isRunning = true;
     requestAnimationFrame(this.gameLoop);
@@ -114,8 +152,8 @@ export class Game {
 
   private render() {
     this.bufferContext.clearRect(0, 0, this.width, this.height);
-    this.gameBoardContext.clearRect(0, 0, this.width, this.height);
 
+    this.gameBoardContext.clearRect(0, 0, this.width, this.height);
     if (this.entityManager.hasNoEntities) {
       return;
     } else {

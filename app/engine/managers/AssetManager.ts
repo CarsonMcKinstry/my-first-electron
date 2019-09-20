@@ -2,12 +2,13 @@
 import { TextureManager } from "./TextureManager";
 
 export class AssetManager {
-  // constructor(private manager: EntityManager) {}
-
+  constructor(private readonly assetBase: string) {}
   private _textures: Map<string, HTMLCanvasElement> = new Map();
 
-  public async addTexture(textureId: string, assetPath: string): Promise<void> {
-    const texture = await TextureManager.loadTexture(assetPath);
+  public async addTexture(textureId: string, fileName: string): Promise<void> {
+    const texture = await TextureManager.loadTexture(
+      `${this.assetBase}/${fileName}`
+    );
 
     this._textures.set(textureId, texture);
   }

@@ -10,14 +10,14 @@ let win: BrowserWindow | null;
 function createWindow() {
   win = new BrowserWindow({
     width: GAME_WIDTH,
-    height: GAME_HEIGHT + 6,
+    height: GAME_HEIGHT,
     resizable: false,
     // maxWidth: 800,
     // minWidth: 800,
     // maxHeight: 600,
     // minHeight: 600,
     frame: false,
-    // movable: true,
+    movable: true,
     webPreferences: {
       nodeIntegration: true
     }

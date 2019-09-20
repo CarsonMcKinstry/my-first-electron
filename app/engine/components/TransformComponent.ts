@@ -23,7 +23,11 @@ export class TransformComponent extends Component {
   }
 
   update(deltaTime: number, ticks: number) {
-    this.pos = this.pos.add(this.vel.scale(deltaTime));
+    const toAdd = new Vector(
+      this.velocity.x * deltaTime,
+      this.velocity.y * deltaTime
+    );
+    this.pos = this.position.add(toAdd);
   }
 
   render() {}

@@ -9,6 +9,11 @@ export class Vector {
     return this._y;
   }
 
+  public set(x: number, y: number) {
+    this._x = x;
+    this._y = y;
+  }
+
   public add(v: Vector) {
     this._x += v.x;
     this._y += v.y;

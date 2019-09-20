@@ -1,7 +1,7 @@
-import { TextureManager } from "./../managers/TextureManager";
-import { AnimationOptions } from "./../types";
-import { AssetManager } from "./../managers/AssetManager";
-import { TransformComponent } from "../components/TransformComponent";
+import { TextureManager } from "../managers/TextureManager";
+import { AnimationOptions } from "../types";
+import { AssetManager } from "../managers/AssetManager";
+import { TransformComponent } from "./TransformComponent";
 import { Component } from "./Component";
 import { Entity } from "../entities/Entity";
 import { Rect } from "../primitives/Rect";
@@ -40,8 +40,6 @@ export class SpriteComponent extends Component {
       this.transform = transform;
     }
 
-    this.texture = this.setTexture(textureId);
-
     if (animationOptions) {
       this.isAnimated = true;
       this.isFixed = animationOptions.isFixed;
@@ -57,6 +55,7 @@ export class SpriteComponent extends Component {
         });
 
         this.currentAnimationName = animationOptions.animationNames[0];
+        console.log(this.currentAnimationName);
       }
 
       this.animationIndex = 0;
@@ -67,6 +66,8 @@ export class SpriteComponent extends Component {
       );
     }
     this.play(this.currentAnimationName);
+
+    this.texture = this.setTexture(textureId);
   }
 
   setTexture(textureId: string): HTMLCanvasElement {
@@ -92,28 +93,56 @@ export class SpriteComponent extends Component {
         this.transform.width,
         this.transform.height
       );
+      this.destinationRect = new Rect(
+        0,
+        0,
+        this.transform.width,
+        this.transform.height
+      );
     }
   }
 
   update(deltaTime: number, currentTime: number) {
     if (this.isAnimated) {
-      const x =
-        this.sourceRect.width *
-        (Math.floor(currentTime / this.animationSpeed) % this.numFrames);
-      const y = this.transform
-        ? this.animationIndex * this.transform.height
-        : 0;
-
-      const move = new Vector(x, y);
-
-      this.sourceRect.move(move);
+      const s = Math.floor(currentTime / this.animationSpeed) % this.numFrames;
+      this.sourceRect.move(
+        new Vector(this.sourceRect.width * s, this.sourceRect.y)
+      );
     }
 
     if (this.transform) {
-      this.destinationRect = this.destinationRect
+      this.sourceRect.move(
+        new Vector(
+          this.sourceRect.x,
+          this.animationIndex * this.transform.height
+        )
+      );
+    }
+
+    if (this.transform) {
+      this.destinationRect
         .move(this.transform.position)
         .scale(this.transform.scale);
     }
+    // if (this.isAnimated) {
+    //   const x =
+    //     this.sourceRect.width *
+    //     (Math.floor(currentTime / this.animationSpeed) % this.numFrames);
+
+    //   const move = new Vector(x, 0);
+
+    //   this.sourceRect.move(move);
+    // }
+    // const move = new Vector(
+    //   0,
+    //   this.transform ? this.animationIndex * this.transform.height : 0
+    // );
+    // this.sourceRect.move(move);
+    // if (this.transform) {
+    //   this.destinationRect = this.destinationRect
+    //     .move(this.transform.position)
+    //     .scale(this.transform.scale);
+    // }
   }
 
   render() {

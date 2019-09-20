@@ -1,11 +1,14 @@
 body,
-html {
+html,
+#game {
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
 }
 
-canvas {
-  margin: 0;
+#game {
+  background-color: black;
 }
