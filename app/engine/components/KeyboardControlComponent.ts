@@ -4,10 +4,7 @@ import { Component } from "./Component";
 import { Entity } from "../entities/Entity";
 import { Vector } from "../primitives/Vector";
 import { fromEvent, Subscription, merge, Observable } from "rxjs";
-import { filter, share } from "rxjs/operators";
-
-const keyPress = (k: number) => (o: Observable<KeyboardEvent>) =>
-  o.pipe(filter(e => e.keyCode === k));
+import { filter, share, tap, mapTo } from "rxjs/operators";
 
 type KeyHandler = (
   e: Observable<KeyboardEvent>,
@@ -21,9 +18,14 @@ interface Keys {
   right: KeyHandler;
 }
 
+const keyPress = (k: number, e: Observable<KeyboardEvent>) =>
+  e.pipe(filter(e => e.keyCode === k));
+
 export class KeyboardControl extends Component {
   public transform: TransformComponent;
   public sprite: SpriteComponent;
+
+  private control: Subscription;
 
   constructor(
     public upKey: string, // 38
@@ -39,64 +41,44 @@ export class KeyboardControl extends Component {
     this.sprite = this.entity.getComponent(
       "SpriteComponent"
     ) as SpriteComponent;
+
+    const keyDown = fromEvent<KeyboardEvent>(document, "keydown").pipe(share());
+    const keyUp = fromEvent<KeyboardEvent>(document, "keyup").pipe(share());
+
+    const downs = [
+      keyPress(37, keyDown).pipe(mapTo({ x: -20, direction: this.leftKey })),
+      keyPress(38, keyDown).pipe(mapTo({ y: -20, direction: this.upKey })),
+      keyPress(39, keyDown).pipe(mapTo({ x: 20, direction: this.rightKey })),
+      keyPress(40, keyDown).pipe(mapTo({ y: 20, direction: this.downKey }))
+    ];
+    const ups = [
+      keyPress(37, keyUp).pipe(mapTo({ x: 0 })),
+      keyPress(38, keyUp).pipe(mapTo({ y: 0 })),
+      keyPress(39, keyUp).pipe(mapTo({ x: 0 })),
+      keyPress(40, keyUp).pipe(mapTo({ y: 0 }))
+    ];
+
+    this.control = merge<{
+      x?: number;
+      y?: number;
+      direction?: string;
+    }>(...ups, ...downs)
+      .pipe(
+        tap(({ x, y, direction }) => {
+          if (direction) {
+            this.sprite.play(direction);
+          }
+          if (x !== undefined) {
+            this.transform.velocity.x = x;
+          }
+          if (y !== undefined) {
+            this.transform.velocity.y = y;
+          }
+        })
+      )
+      .subscribe();
   }
-
-  update() {
-    document.removeEventListener("keydown", this.handleKeyDown);
-
-    document.addEventListener("keydown", this.handleKeyDown);
-
-    document.removeEventListener("keyup", this.handleKeyUp);
-
-    document.addEventListener("keyup", this.handleKeyUp);
-  }
-
-  handleKeyDown = (e: KeyboardEvent) => {
-    switch (e.keyCode) {
-      case 38: // up
-        this.sprite.play(this.upKey);
-        this.transform.velocity.set(this.transform.velocity.x, -20);
-        break;
-      case 40: // down
-        this.sprite.play(this.downKey);
-        this.transform.velocity.set(this.transform.velocity.x, 20);
-        break;
-      case 37: // left
-        this.sprite.play(this.leftKey);
-        this.transform.velocity.set(-20, this.transform.velocity.y);
-        break;
-      case 39: // right
-        this.sprite.play(this.rightKey);
-        this.transform.velocity.set(20, this.transform.velocity.y);
-        break;
-      case 32: // shoot
-        break;
-      default:
-        break;
-    }
-  };
-
-  handleKeyUp = (e: KeyboardEvent) => {
-    switch (e.keyCode) {
-      case 38: // up
-        this.transform.velocity.set(this.transform.velocity.x, 0);
-
-        break;
-      case 40: // down
-        this.transform.velocity.set(this.transform.velocity.x, 0);
-        break;
-      case 37: // left
-        this.transform.velocity.set(0, this.transform.velocity.y);
-        break;
-      case 39: // right
-        this.transform.velocity.set(0, this.transform.velocity.y);
-        break;
-      case 32: // shoot
-        break;
-      default:
-        break;
-    }
-  };
+  update() {}
 
   initialize() {}
 
