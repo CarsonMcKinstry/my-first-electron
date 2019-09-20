@@ -2,11 +2,6 @@ import { Vector } from "./../Vector";
 import { EntityManager } from "./../EntityManager";
 import { Component } from "../Component";
 
-interface Position {
-  x: number;
-  y: number;
-}
-
 export class TransformComponent extends Component {
   public position: Vector;
   public velocity: Vector;

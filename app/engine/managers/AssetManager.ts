@@ -12,7 +12,8 @@ export class AssetManager {
     this._textures.set(textureId, texture);
   }
 
-  public getTexture(textureId: string): HTMLCanvasElement | undefined {
+  public getTexture(textureId: string): HTMLCanvasElement {
+    // @ts-ignore
     return this._textures.get(textureId);
   }
 

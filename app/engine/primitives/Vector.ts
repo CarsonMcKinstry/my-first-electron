@@ -10,11 +10,16 @@ export class Vector {
   }
 
   public add(v: Vector) {
-    return new Vector(this.x + v.x, this.y + v.y);
+    this._x += v.x;
+    this._y += v.y;
+
+    return this;
   }
 
   public subtract(v: Vector) {
-    return new Vector(this.x - v.x, this.y - v.y);
+    this._x -= v.x;
+    this._y -= v.y;
+    return this;
   }
 
   public invert() {
@@ -23,9 +28,13 @@ export class Vector {
 
   public scale(s: number | Vector) {
     if (s instanceof Vector) {
-      return new Vector(this.x * s.x, this.y * s.y);
+      this._x *= s.x;
+      this._y *= s.y;
+    } else {
+      this._x *= s;
+      this._y *= s;
     }
 
-    return new Vector(this.x * s, this.y * s);
+    return this;
   }
 }
