@@ -18,9 +18,14 @@ export class Entity {
     return this._isActive;
   }
 
-  public update(deltaTime: number, ticks: number): void {
+  public update(
+    deltaTime: number,
+    ticks: number,
+    gameWidth?: number,
+    gameHeight?: number
+  ): void {
     this.components.forEach(component => {
-      component.update(deltaTime, ticks);
+      component.update(deltaTime, ticks, gameWidth, gameHeight);
     });
   }
 

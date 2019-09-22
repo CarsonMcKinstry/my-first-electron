@@ -46,10 +46,10 @@ export class KeyboardControl extends Component {
     const keyUp = fromEvent<KeyboardEvent>(document, "keyup").pipe(share());
 
     const downs = [
-      keyPress(37, keyDown).pipe(mapTo({ x: -20, direction: this.leftKey })),
-      keyPress(38, keyDown).pipe(mapTo({ y: -20, direction: this.upKey })),
-      keyPress(39, keyDown).pipe(mapTo({ x: 20, direction: this.rightKey })),
-      keyPress(40, keyDown).pipe(mapTo({ y: 20, direction: this.downKey }))
+      keyPress(37, keyDown).pipe(mapTo({ x: -200, direction: this.leftKey })),
+      keyPress(38, keyDown).pipe(mapTo({ y: -200, direction: this.upKey })),
+      keyPress(39, keyDown).pipe(mapTo({ x: 200, direction: this.rightKey })),
+      keyPress(40, keyDown).pipe(mapTo({ y: 200, direction: this.downKey }))
     ];
     const ups = [
       keyPress(37, keyUp).pipe(mapTo({ x: 0 })),

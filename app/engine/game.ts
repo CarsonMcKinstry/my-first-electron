@@ -121,7 +121,12 @@ export class Game {
 
   private update() {
     setTimeout(() => {
-      this.entityManager.update(this.deltaTime, this.lastTicks);
+      this.entityManager.update(
+        this.deltaTime,
+        this.lastTicks,
+        this.width,
+        this.height
+      );
     }, this.frameTargetTime);
   }
 

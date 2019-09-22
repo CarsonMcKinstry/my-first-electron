@@ -15,9 +15,14 @@ export class EntityManager {
     return this._entities.size;
   }
 
-  public update(deltaTime: number, ticks: number): void {
+  public update(
+    deltaTime: number,
+    ticks: number,
+    gameWidth?: number,
+    gameHeight?: number
+  ): void {
     this.entities.forEach(entity => {
-      entity.update(deltaTime, ticks);
+      entity.update(deltaTime, ticks, gameWidth, gameHeight);
     });
   }
 
