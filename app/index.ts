@@ -20,7 +20,7 @@ window.addEventListener("load", () => {
     const game = new Game(
       gameWidth,
       gameHeight,
-      `${assetPath}/assets/images/`,
+      `${assetPath}/assets/`,
       FRAME_TARGET_TIME,
       () => {
         ipcRenderer.send("quit");

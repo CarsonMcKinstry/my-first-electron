@@ -8,6 +8,7 @@ import { filter, tap } from "rxjs/operators";
 import { Canvas } from "./types";
 import { EntityManager } from "./managers/EntityManager";
 import { Vector } from "./primitives/Vector";
+import { GameMap } from "./Map";
 
 export class Game {
   private _isRunning: boolean = false;
@@ -59,8 +60,24 @@ export class Game {
   public async loadLevel(level: number) {
     await this.assetManager.addTexture(
       "chopper-image",
-      "chopper-spritesheet.png"
+      "images/chopper-spritesheet.png"
     );
+    await this.assetManager.addTexture(
+      "jungle-tiletexture",
+      "tilemaps/jungle.png"
+    );
+
+    const map = new GameMap(
+      "jungle-tiletexture",
+      1,
+      32,
+      this.entityManager,
+      this.assetManager,
+      this.bufferContext
+    );
+
+    map.loadMap(`${this.assetBase}/tilemaps/jungle.map`);
+
     const chopperEntity = this.entityManager.addEntity("chopper");
 
     chopperEntity.addComponent(
