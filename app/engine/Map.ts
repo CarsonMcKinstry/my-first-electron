@@ -14,7 +14,8 @@ export class GameMap {
     private readonly tileSize: number,
     private enitityManager: EntityManager,
     private assetManger: AssetManager,
-    private buffer: CanvasRenderingContext2D
+    private buffer: CanvasRenderingContext2D,
+    private camera: Rect
   ) {}
 
   async loadMap(filePath: string) {
@@ -61,7 +62,8 @@ export class GameMap {
         source,
         position,
         this.tileSize,
-        this.scale
+        this.scale,
+        this.camera
       )
     );
   }

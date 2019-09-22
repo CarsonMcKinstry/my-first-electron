@@ -9,6 +9,8 @@ import { Canvas, LayerType } from "./types";
 import { EntityManager } from "./managers/EntityManager";
 import { Vector } from "./primitives/Vector";
 import { GameMap } from "./Map";
+import { Rect } from "./primitives/Rect";
+import { Entity } from "./entities/Entity";
 
 export class Game {
   private _isRunning: boolean = false;
@@ -18,6 +20,8 @@ export class Game {
   private gameBoardContext: CanvasRenderingContext2D;
   private buffer: HTMLCanvasElement;
   private bufferContext: CanvasRenderingContext2D;
+  public camera: Rect;
+  private player?: Entity;
 
   private keyboardListener?: Subscription;
 
@@ -41,6 +45,8 @@ export class Game {
 
     this.gameBoard = gameBoard.canvas;
     this.gameBoardContext = gameBoard.context;
+
+    this.camera = new Rect(0, 0, width, height);
   }
 
   private createCanvas(width: number, height: number): Canvas {
@@ -70,11 +76,12 @@ export class Game {
 
     const map = new GameMap(
       "jungle-tiletexture",
-      1,
+      2,
       32,
       this.entityManager,
       this.assetManager,
-      this.bufferContext
+      this.bufferContext,
+      this.camera
     );
 
     map.loadMap(`${this.assetBase}/tilemaps/jungle.map`);
@@ -93,6 +100,7 @@ export class Game {
         "radar-image",
         this.assetManager,
         this.bufferContext,
+        this.camera,
         {
           animationSpeed: 90,
           numFrames: 8,
@@ -102,20 +110,21 @@ export class Game {
       )
     );
 
-    const chopperEntity = this.entityManager.addEntity(
+    this.player = this.entityManager.addEntity(
       "chopper",
       LayerType.PLAYER_LAYER
     );
 
-    chopperEntity.addComponent(
+    this.player.addComponent(
       new TransformComponent(new Vector(240, 106), new Vector(0, 0), 32, 32, 1)
     );
-    chopperEntity.addComponent(
+    this.player.addComponent(
       new SpriteComponent(
-        chopperEntity,
+        this.player,
         "chopper-image",
         this.assetManager,
         this.bufferContext,
+        this.camera,
         {
           numFrames: 2,
           animationSpeed: 90,
@@ -125,8 +134,8 @@ export class Game {
         }
       )
     );
-    chopperEntity.addComponent(
-      new KeyboardControl("UP", "DOWN", "LEFT", "RIGHT", chopperEntity)
+    this.player.addComponent(
+      new KeyboardControl("UP", "DOWN", "LEFT", "RIGHT", this.player)
     );
   }
 
@@ -170,7 +179,28 @@ export class Game {
         this.width,
         this.height
       );
+      this.handleCameraMovement();
     }, this.frameTargetTime);
+  }
+
+  private handleCameraMovement() {
+    if (this.player) {
+      const playerTransform = this.player.getComponent(
+        "TransformComponent"
+      ) as TransformComponent;
+
+      let playerX = playerTransform.position.x - this.width / 2;
+      let playerY = playerTransform.position.y - this.height / 2;
+
+      playerX = playerX < 0 ? 0 : playerX;
+      playerY = playerY < 0 ? 0 : playerY;
+
+      playerX = playerX > this.camera.width ? this.camera.width : playerX;
+      playerY = playerY > this.camera.height ? this.camera.height : playerY;
+      const newPosition = new Vector(playerX, playerY);
+
+      this.camera.move(newPosition);
+    }
   }
 
   private createKeyboardListener() {

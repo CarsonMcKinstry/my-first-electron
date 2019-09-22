@@ -12,7 +12,8 @@ export class TileComponent extends Component {
     public source: Rect,
     public position: Vector,
     public tileSize: number,
-    public tileScale: number
+    public tileScale: number,
+    private camera: Rect
   ) {
     super();
 
@@ -24,7 +25,14 @@ export class TileComponent extends Component {
     );
   }
 
-  update() {}
+  update() {
+    this.destination.move(
+      new Vector(
+        this.position.x - this.camera.x,
+        this.position.y - this.camera.y
+      )
+    );
+  }
   initialize() {}
   render() {
     TextureManager.draw(

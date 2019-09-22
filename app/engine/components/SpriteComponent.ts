@@ -29,6 +29,7 @@ export class SpriteComponent extends Component {
     private textureId: string,
     private assetManager: AssetManager,
     private buffer: CanvasRenderingContext2D,
+    private camera: Rect,
     private animationOptions?: AnimationOptions
   ) {
     super();
@@ -121,28 +122,18 @@ export class SpriteComponent extends Component {
 
     if (this.transform) {
       this.destinationRect
-        .move(this.transform.position)
+        .move(
+          new Vector(
+            this.isFixed
+              ? this.transform.position.x
+              : this.transform.position.x - this.camera.x,
+            this.isFixed
+              ? this.transform.position.y
+              : this.transform.position.y - this.camera.y
+          )
+        )
         .scale(this.transform.scale);
     }
-    // if (this.isAnimated) {
-    //   const x =
-    //     this.sourceRect.width *
-    //     (Math.floor(currentTime / this.animationSpeed) % this.numFrames);
-
-    //   const move = new Vector(x, 0);
-
-    //   this.sourceRect.move(move);
-    // }
-    // const move = new Vector(
-    //   0,
-    //   this.transform ? this.animationIndex * this.transform.height : 0
-    // );
-    // this.sourceRect.move(move);
-    // if (this.transform) {
-    //   this.destinationRect = this.destinationRect
-    //     .move(this.transform.position)
-    //     .scale(this.transform.scale);
-    // }
   }
 
   render() {
