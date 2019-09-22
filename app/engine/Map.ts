@@ -1,3 +1,4 @@
+import { LayerType } from "./types";
 import { AssetManager } from "./managers/AssetManager";
 import { Vector } from "./primitives/Vector";
 import { TileComponent } from "./components/TileComponent";
@@ -48,7 +49,10 @@ export class GameMap {
   }
 
   addTile(source: Rect, position: Vector, texture: HTMLCanvasElement) {
-    const newTile = this.enitityManager.addEntity(`tile-${uuid()}`);
+    const newTile = this.enitityManager.addEntity(
+      `tile-${uuid()}`,
+      LayerType.TILEMAP_LAYER
+    );
 
     newTile.addComponent(
       new TileComponent(

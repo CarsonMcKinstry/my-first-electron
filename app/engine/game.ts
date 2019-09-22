@@ -5,7 +5,7 @@ import { SpriteComponent } from "./Components/SpriteComponent";
 import { AssetManager } from "./managers/AssetManager";
 import { fromEvent, merge, Subscription, Observable } from "rxjs";
 import { filter, tap } from "rxjs/operators";
-import { Canvas } from "./types";
+import { Canvas, LayerType } from "./types";
 import { EntityManager } from "./managers/EntityManager";
 import { Vector } from "./primitives/Vector";
 import { GameMap } from "./Map";
@@ -66,6 +66,7 @@ export class Game {
       "jungle-tiletexture",
       "tilemaps/jungle.png"
     );
+    await this.assetManager.addTexture("radar-image", "images/radar.png");
 
     const map = new GameMap(
       "jungle-tiletexture",
@@ -78,7 +79,33 @@ export class Game {
 
     map.loadMap(`${this.assetBase}/tilemaps/jungle.map`);
 
-    const chopperEntity = this.entityManager.addEntity("chopper");
+    const radarEntity = this.entityManager.addEntity(
+      "radar",
+      LayerType.UI_LAYER
+    );
+
+    radarEntity.addComponent(
+      new TransformComponent(new Vector(720, 15), new Vector(0, 0), 64, 64, 1)
+    );
+    radarEntity.addComponent(
+      new SpriteComponent(
+        radarEntity,
+        "radar-image",
+        this.assetManager,
+        this.bufferContext,
+        {
+          animationSpeed: 90,
+          numFrames: 8,
+          isFixed: true,
+          hasDirections: false
+        }
+      )
+    );
+
+    const chopperEntity = this.entityManager.addEntity(
+      "chopper",
+      LayerType.PLAYER_LAYER
+    );
 
     chopperEntity.addComponent(
       new TransformComponent(new Vector(240, 106), new Vector(0, 0), 32, 32, 1)
@@ -90,7 +117,6 @@ export class Game {
         this.assetManager,
         this.bufferContext,
         {
-          id: "chopper-image",
           numFrames: 2,
           animationSpeed: 90,
           isFixed: false,

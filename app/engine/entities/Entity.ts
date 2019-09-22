@@ -1,3 +1,4 @@
+import { LayerType } from "./../types";
 import { Component } from "../components/Component";
 import { EntityManager } from "../managers/EntityManager";
 
@@ -7,6 +8,7 @@ export class Entity {
 
   constructor(
     private manager: EntityManager,
+    public layer: LayerType,
     private readonly _name?: string
   ) {}
 

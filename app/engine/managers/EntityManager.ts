@@ -1,3 +1,4 @@
+import { LayerType } from "./../types";
 import { Entity } from "../entities/Entity";
 
 export class EntityManager {
@@ -27,17 +28,37 @@ export class EntityManager {
   }
 
   public render(buffer: CanvasRenderingContext2D): void {
-    this.entities.forEach(entity => {
-      entity.render(buffer);
-    });
+    for (const layer of Object.values(LayerType)) {
+      const entities = this.getEntitiesByLayer(layer);
+
+      entities.forEach(entity => {
+        entity.render(buffer);
+      });
+    }
   }
 
-  public addEntity(name: string): Entity {
-    const entity = new Entity(this, name);
+  public addEntity(name: string, layer: LayerType): Entity {
+    const entity = new Entity(this, layer, name);
 
     this._entities.set(name, entity);
 
     return entity;
+  }
+
+  public getEntities(entityId: string) {
+    return this._entities.get(entityId);
+  }
+
+  public getEntitiesByLayer(layer: LayerType) {
+    const entities = [];
+
+    for (const [_, entity] of this._entities) {
+      if (entity.layer === layer) {
+        entities.push(entity);
+      }
+    }
+
+    return entities;
   }
 
   public clearEntities(): void {
