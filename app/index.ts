@@ -1,5 +1,5 @@
 import { remote, ipcRenderer } from "electron";
-import { Game } from "./engine/game";
+import { Game } from "./old/game";
 
 const FPS = 60;
 const FRAME_TARGET_TIME = 1000 / FPS;

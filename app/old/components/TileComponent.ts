@@ -1,4 +1,4 @@
-import { Vector } from "./../primitives/Vector";
+import { Vector } from "../primitives/Vector";
 import { Component } from "./Component";
 import { Rect } from "../primitives/Rect";
 import { TextureManager } from "../managers/TextureManager";

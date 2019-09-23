@@ -1,4 +1,4 @@
-import { LayerType } from "./../types";
+import { LayerType } from "../types";
 import { Entity } from "../entities/Entity";
 
 export class EntityManager {
