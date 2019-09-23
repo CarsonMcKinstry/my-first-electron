@@ -1,5 +1,5 @@
-import { LayerType } from "../types";
-import { Entity } from "../entities/Entity";
+import { LayerType } from '../types';
+import { Entity } from '../entities/Entity';
 
 export class EntityManager {
   private _entities: Map<string, Entity> = new Map();
