@@ -1,12 +1,10 @@
-import { LayerType } from './types';
+import { LayerType, Vector, Rect, Canvas } from './_types';
 import { AssetManager } from '../engine/managers/AssetManager';
-import { Vector } from './primitives/Vector';
 import { TileComponent } from './components/TileComponent';
 import uuid from 'uuid/v4';
 import { EntityManager } from './managers/EntityManager';
-import { Rect } from './primitives/Rect';
 import { promises as fs } from 'fs';
-
+import { createRect, createVector } from './utils';
 export class GameMap {
   constructor(
     private readonly textureId: string,
@@ -14,8 +12,7 @@ export class GameMap {
     private readonly tileSize: number,
     private enitityManager: EntityManager,
     private assetManger: AssetManager,
-    private buffer: CanvasRenderingContext2D,
-    private camera: Rect
+    private buffer: Canvas
   ) {}
 
   async loadMap(filePath: string) {
@@ -32,14 +29,13 @@ export class GameMap {
     mapFile.forEach((_, y) => {
       _.map((tile, x) => {
         const tilePos = tile.split('').map(Number);
-
-        const source = new Rect(
+        const source = createRect(
           tilePos[1] * this.tileSize,
           tilePos[0] * this.tileSize,
           this.tileSize,
           this.tileSize
         );
-        const position = new Vector(
+        const position = createVector(
           x * this.scale * this.tileSize,
           y * this.scale * this.tileSize
         );
@@ -50,7 +46,7 @@ export class GameMap {
   }
 
   addTile(source: Rect, position: Vector, texture: HTMLCanvasElement) {
-    const newTile = this.enitityManager.addEntity(
+    const newTile = this.enitityManager.create(
       `tile-${uuid()}`,
       LayerType.TILEMAP_LAYER
     );
@@ -62,8 +58,8 @@ export class GameMap {
         source,
         position,
         this.tileSize,
-        this.scale,
-        this.camera
+        this.scale
+        // this.camera
       )
     );
   }

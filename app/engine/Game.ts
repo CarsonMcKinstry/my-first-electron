@@ -1,3 +1,4 @@
+import { EntityManager, AssetManager } from './managers';
 import { Canvas } from './../old/types';
 import { createCanvas } from './utils';
 
@@ -7,6 +8,9 @@ export class Game {
   private screen: Canvas;
   private deltaTime: number = 0;
   private lastTicks: number = 0;
+
+  private entityManager: EntityManager = new EntityManager();
+  private assetManager: AssetManager;
 
   constructor(
     private root: HTMLElement,
@@ -20,6 +24,8 @@ export class Game {
     this.screen = createCanvas(width, height);
 
     root.appendChild(this.screen.canvas);
+
+    this.assetManager = new AssetManager(assetBase);
   }
 
   public get isRunning() {

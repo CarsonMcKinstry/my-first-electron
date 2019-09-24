@@ -23,3 +23,17 @@ export enum LayerType {
   PROJECTILE_LAYER = 4,
   UI_LAYER = 5
 }
+
+export interface AnimationOptions {
+  numFrames: number;
+  animationSpeed: number;
+  hasDirections: boolean;
+  isFixed: boolean;
+  animationNames?: string[];
+}
+
+export interface Animation {
+  index: number;
+  numFrames: number;
+  animationSpeed: number;
+}

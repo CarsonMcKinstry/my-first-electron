@@ -20,6 +20,14 @@ export class EntityManager {
     this.entities.clear();
   }
 
+  public create(name: string, layer: LayerType) {
+    const entity = new Entity(layer, name);
+
+    this._entities.set(name, entity);
+
+    return entity;
+  }
+
   public getEntity(entityId: string) {
     if (this._entities.has(entityId)) {
       return this._entities.get(entityId);

@@ -1,5 +1,5 @@
 // import { EntityManager } from "./EntityManager";
-import { TextureManager } from "./TextureManager";
+import { TextureManager } from './TextureManager';
 
 export class AssetManager {
   constructor(private readonly assetBase: string) {}
@@ -14,8 +14,11 @@ export class AssetManager {
   }
 
   public getTexture(textureId: string): HTMLCanvasElement {
-    // @ts-ignore
-    return this._textures.get(textureId);
+    if (this._textures.has(textureId)) {
+      return this._textures.get(textureId) as HTMLCanvasElement;
+    } else {
+      throw new Error(`Texture with textureId: ${textureId} doesn't exist`);
+    }
   }
 
   public clearTextures() {

@@ -1,12 +1,12 @@
-import { TextureManager } from "../managers/TextureManager";
-import { AnimationOptions } from "../types";
-import { AssetManager } from "../managers/AssetManager";
-import { TransformComponent } from "./TransformComponent";
-import { Component } from "./Component";
-import { Entity } from "../entities/Entity";
-import { Rect } from "../primitives/Rect";
-import { Vector } from "../primitives/Vector";
-import { Animation } from "../primitives/Animation";
+import { TextureManager } from '../../engine/managers/TextureManager';
+import { AnimationOptions } from '../types';
+import { AssetManager } from '../../engine/managers/AssetManager';
+import { TransformComponent } from './TransformComponent';
+import { Component } from './Component';
+import { Entity } from '../entities/Entity';
+import { Rect } from '../primitives/Rect';
+import { Vector } from '../primitives/Vector';
+import { Animation } from '../primitives/Animation';
 
 // const AnimationDirections = ["DOWN", "RIGHT", "LEFT", "UP"];
 
@@ -19,7 +19,7 @@ export class SpriteComponent extends Component {
   private animations: Map<string, Animation> = new Map();
   private isFixed: boolean = false;
   private isAnimated: boolean = false;
-  private currentAnimationName: string = "";
+  private currentAnimationName: string = '';
   private animationIndex: number = 0;
   private animationSpeed: number = 90;
   private numFrames: number = 1;
@@ -34,7 +34,7 @@ export class SpriteComponent extends Component {
   ) {
     super();
 
-    const transform = entity.getComponent("TransformComponent");
+    const transform = entity.getComponent('TransformComponent');
 
     if (transform) {
       // @ts-ignore
@@ -62,7 +62,7 @@ export class SpriteComponent extends Component {
       this.animationIndex = 0;
     } else {
       this.animations.set(
-        "SINGLE",
+        'SINGLE',
         new Animation(0, this.numFrames, this.animationSpeed)
       );
     }

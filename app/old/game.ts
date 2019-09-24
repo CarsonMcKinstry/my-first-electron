@@ -1,16 +1,16 @@
 // import { KeyboardControl } from './../Components/KeyboardControlComponent';
-import { TransformComponent } from "./Components/TransformComponent";
-import { KeyboardControl } from "./Components/KeyboardControlComponent";
-import { SpriteComponent } from "./Components/SpriteComponent";
-import { AssetManager } from "./managers/AssetManager";
-import { fromEvent, merge, Subscription, Observable } from "rxjs";
-import { filter, tap } from "rxjs/operators";
-import { Canvas, LayerType } from "./types";
-import { EntityManager } from "./managers/EntityManager";
-import { Vector } from "./primitives/Vector";
-import { GameMap } from "./Map";
-import { Rect } from "./primitives/Rect";
-import { Entity } from "./entities/Entity";
+import { TransformComponent } from './Components/TransformComponent';
+import { KeyboardControl } from './Components/KeyboardControlComponent';
+import { SpriteComponent } from './Components/SpriteComponent';
+import { AssetManager } from '../engine/managers/AssetManager';
+import { fromEvent, merge, Subscription, Observable } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+import { Canvas, LayerType } from './types';
+import { EntityManager } from './managers/EntityManager';
+import { Vector } from './primitives/Vector';
+import { GameMap } from './Map';
+import { Rect } from './primitives/Rect';
+import { Entity } from './entities/Entity';
 
 export class Game {
   private _isRunning: boolean = false;
@@ -50,12 +50,12 @@ export class Game {
   }
 
   private createCanvas(width: number, height: number): Canvas {
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
 
     canvas.width = width;
     canvas.height = height;
 
-    const context = canvas.getContext("2d");
+    const context = canvas.getContext('2d');
 
     return {
       canvas,
@@ -65,17 +65,17 @@ export class Game {
 
   public async loadLevel(level: number) {
     await this.assetManager.addTexture(
-      "chopper-image",
-      "images/chopper-spritesheet.png"
+      'chopper-image',
+      'images/chopper-spritesheet.png'
     );
     await this.assetManager.addTexture(
-      "jungle-tiletexture",
-      "tilemaps/jungle.png"
+      'jungle-tiletexture',
+      'tilemaps/jungle.png'
     );
-    await this.assetManager.addTexture("radar-image", "images/radar.png");
+    await this.assetManager.addTexture('radar-image', 'images/radar.png');
 
     const map = new GameMap(
-      "jungle-tiletexture",
+      'jungle-tiletexture',
       2,
       32,
       this.entityManager,
@@ -87,7 +87,7 @@ export class Game {
     map.loadMap(`${this.assetBase}/tilemaps/jungle.map`);
 
     const radarEntity = this.entityManager.addEntity(
-      "radar",
+      'radar',
       LayerType.UI_LAYER
     );
 
@@ -97,7 +97,7 @@ export class Game {
     radarEntity.addComponent(
       new SpriteComponent(
         radarEntity,
-        "radar-image",
+        'radar-image',
         this.assetManager,
         this.bufferContext,
         this.camera,
@@ -111,7 +111,7 @@ export class Game {
     );
 
     this.player = this.entityManager.addEntity(
-      "chopper",
+      'chopper',
       LayerType.PLAYER_LAYER
     );
 
@@ -121,7 +121,7 @@ export class Game {
     this.player.addComponent(
       new SpriteComponent(
         this.player,
-        "chopper-image",
+        'chopper-image',
         this.assetManager,
         this.bufferContext,
         this.camera,
@@ -130,12 +130,12 @@ export class Game {
           animationSpeed: 90,
           isFixed: false,
           hasDirections: true,
-          animationNames: ["DOWN", "RIGHT", "LEFT", "UP"]
+          animationNames: ['DOWN', 'RIGHT', 'LEFT', 'UP']
         }
       )
     );
     this.player.addComponent(
-      new KeyboardControl("UP", "DOWN", "LEFT", "RIGHT", this.player)
+      new KeyboardControl('UP', 'DOWN', 'LEFT', 'RIGHT', this.player)
     );
   }
 
@@ -186,7 +186,7 @@ export class Game {
   private handleCameraMovement() {
     if (this.player) {
       const playerTransform = this.player.getComponent(
-        "TransformComponent"
+        'TransformComponent'
       ) as TransformComponent;
 
       let playerX = playerTransform.position.x - this.width / 2;
@@ -208,7 +208,7 @@ export class Game {
       this.keyboardListener.unsubscribe();
     }
 
-    const keydowns = fromEvent<KeyboardEvent>(document, "keydown");
+    const keydowns = fromEvent<KeyboardEvent>(document, 'keydown');
 
     const quit = keydowns.pipe(
       filter(e => e.keyCode === 27),
