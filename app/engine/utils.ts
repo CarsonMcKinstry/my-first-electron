@@ -87,7 +87,7 @@ export const clamp = (n: number, min: number, max: number) => {
     return max;
   }
 
-  return max;
+  return n;
 };
 
 export const createAnimation = (

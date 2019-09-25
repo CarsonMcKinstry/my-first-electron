@@ -26,9 +26,10 @@ export class GameMap {
       .then(map => map.split('\n'))
       .then(map => map.map(row => row.split(',')));
 
-    mapFile.forEach((_, y) => {
-      _.map((tile, x) => {
+    mapFile.forEach((m, y) => {
+      m.forEach((tile, x) => {
         const tilePos = tile.split('').map(Number);
+
         const source = createRect(
           tilePos[1] * this.tileSize,
           tilePos[0] * this.tileSize,

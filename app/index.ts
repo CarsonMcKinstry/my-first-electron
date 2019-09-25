@@ -1,35 +1,37 @@
-import { remote, ipcRenderer } from "electron";
-import { Game } from "./old/game";
+import { remote, ipcRenderer } from 'electron';
+import { Game } from './engine';
 
 const FPS = 60;
 const FRAME_TARGET_TIME = 1000 / FPS;
 
 // import { GAME_HEIGHT, GAME_WIDTH } from "../constants.js";
 // import { buildGrid } from "./canvas";
-import "./styles.scss";
+import './styles.scss';
 // import { Game } from "./game";
 
-window.addEventListener("load", () => {
+window.addEventListener('load', () => {
   const gameWidth = window.innerWidth;
   const gameHeight = window.innerHeight;
 
-  const root = document.getElementById("game");
+  const root = document.getElementById('game');
   const assetPath = remote.app.getAppPath();
 
   if (root) {
     const game = new Game(
+      root,
       gameWidth,
       gameHeight,
       `${assetPath}/assets/`,
       FRAME_TARGET_TIME,
       () => {
-        ipcRenderer.send("quit");
+        ipcRenderer.send('quit');
       }
     );
 
-    game.initialize(root);
+    game.initialize();
+    game.start();
   } else {
-    throw new Error("cannot find root");
+    throw new Error('cannot find root');
   }
 });
 

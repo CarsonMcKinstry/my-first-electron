@@ -18,8 +18,8 @@ export class TileComponent extends Component {
 
     this.destination = {
       ...position,
-      w: tileSize * tileScale,
-      h: tileScale * tileScale
+      w: this.tileSize * this.tileScale,
+      h: this.tileSize * this.tileScale
     };
   }
 
