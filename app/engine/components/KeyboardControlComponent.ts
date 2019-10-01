@@ -1,4 +1,4 @@
-import { repositionVector } from './../utils';
+import { repositionVector } from '../utils';
 import { Component } from '../Component';
 import { TransformComponent } from './TransformComponent';
 import { SpriteComponent } from './SpriteComponent';

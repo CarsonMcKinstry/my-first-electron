@@ -1,4 +1,4 @@
-import { KeyboardControl } from './components/KeyboardControlComponen';
+import { KeyboardControl } from './components/KeyboardControlComponent';
 import { EntityManager, AssetManager } from './managers';
 import { Canvas, LayerType } from './_types';
 import { createCanvas, createVector } from './utils';
