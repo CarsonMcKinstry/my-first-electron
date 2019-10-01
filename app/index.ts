@@ -1,5 +1,8 @@
 import { remote, ipcRenderer } from 'electron';
 import { Game } from './engine';
+import path from 'path';
+// @ts-ignore
+import level from './level-1.json';
 
 const FPS = 60;
 const FRAME_TARGET_TIME = 1000 / FPS;
@@ -28,7 +31,7 @@ window.addEventListener('load', () => {
       }
     );
 
-    game.initialize();
+    game.loadLevel(level);
     game.start();
   } else {
     throw new Error('cannot find root');

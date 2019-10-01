@@ -1,0 +1,24 @@
+{
+  "map": {
+    "texture": "tilemaps/jungle.png",
+    "tileSize": 32,
+    "tileMap": "tilemaps/jungle.map"
+  },
+  "player": {
+    "initialPosition": {
+      "x": 240,
+      "y": 106
+    },
+    "initialVelocity": {
+      "x": 0,
+      "y": 0
+    },
+    "sprite": {
+      "numFrames": 2,
+      "animationSpeed": 90,
+      "height": 32,
+      "width": 32,
+      "spriteSheet": "images/chopper-spritesheet.png"
+    }
+  }
+}

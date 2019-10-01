@@ -5,6 +5,7 @@ import { createCanvas, createVector } from './utils';
 import { GameMap } from './Map';
 import { Entity } from './Entity';
 import { SpriteComponent, TransformComponent } from './components';
+import { promises as fs } from 'fs';
 
 export class Game {
   private _isRunning: boolean = false;
@@ -45,61 +46,71 @@ export class Game {
 
   public initialize() {
     // this.createKeyboardListener();
-    this.loadLevel();
+    // this.loadLevel();
   }
 
-  public async loadLevel() {
-    await this.assetManager.addTexture(
-      'jungle-tiletexture',
-      'tilemaps/jungle.png'
-    );
+  public async loadLevel(level: any) {
+    // const level = await fs
+    //   .readFile(levelFile)
+    //   .then(buffer => buffer.toString('utf-8'))
+    //   .then(json => JSON.parse(json));
 
-    await this.assetManager.addTexture(
-      'chopper-image',
-      'images/chopper-spritesheet.png'
-    );
+    if (level) {
+      const { map, player } = level;
 
-    const map = new GameMap(
-      'jungle-tiletexture',
-      1,
-      32,
-      this.entityManager,
-      this.assetManager,
-      this.buffer
-    );
+      await this.assetManager.addTexture('map-tiletexture', map.texture);
+      await this.assetManager.addTexture(
+        'player-texture',
+        player.sprite.spriteSheet
+      );
 
-    await map.loadMap(`${this.assetBase}/tilemaps/jungle.map`);
-
-    this.player = this.entityManager.create('chopper', LayerType.PLAYER_LAYER);
-
-    this.player.addComponent(
-      new TransformComponent(
-        createVector(240, 106),
-        createVector(0, 0),
-        32,
-        32,
-        1
-      )
-    );
-    this.player.addComponent(
-      new SpriteComponent(
-        this.player,
-        'chopper-image',
+      const gamemap = new GameMap(
+        'map-tiletexture',
+        1,
+        map.tileSize,
+        this.entityManager,
         this.assetManager,
-        this.buffer,
-        {
-          numFrames: 2,
-          animationSpeed: 90,
-          isFixed: false,
-          hasDirections: true,
-          animationNames: ['DOWN', 'RIGHT', 'LEFT', 'UP']
-        }
-      )
-    );
+        this.buffer
+      );
 
-    this.player.addComponent(
-      new KeyboardControl('UP', 'DOWN', 'LEFT', 'RIGHT', this.player)
-    );
+      await gamemap.loadMap(`${this.assetBase}/${map.tileMap}`);
+
+      this.player = this.entityManager.create('player', LayerType.PLAYER_LAYER);
+
+      this.player.addComponent(
+        new TransformComponent(
+          player.initialPosition,
+          player.initialVelocity,
+          player.sprite.width,
+          player.sprite.height,
+          1
+        )
+      );
+
+      this.player.addComponent(
+        new SpriteComponent(
+          this.player,
+          'player-texture',
+          this.assetManager,
+          this.buffer,
+          {
+            numFrames: player.sprite.numFrames,
+            animationSpeed: player.sprite.animationSpeed,
+            isFixed: false,
+            hasDirections: true,
+            animationNames: ['DOWN', 'RIGHT', 'LEFT', 'UP']
+          }
+        )
+      );
+
+      this.player.addComponent(
+        new KeyboardControl('UP', 'DOWN', 'LEFT', 'RIGHT', this.player)
+      );
+    }
+
+    // this.player.addComponent(
+    //   new KeyboardControl('UP', 'DOWN', 'LEFT', 'RIGHT', this.player)
+    // );
   }
 
   calculateDeltaTime(ticks: number) {
