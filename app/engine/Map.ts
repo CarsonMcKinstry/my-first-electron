@@ -12,7 +12,8 @@ export class GameMap {
     private readonly tileSize: number,
     private enitityManager: EntityManager,
     private assetManger: AssetManager,
-    private buffer: Canvas
+    private buffer: Canvas,
+    private camera: Rect
   ) {}
 
   async loadMap(filePath: string) {
@@ -59,8 +60,8 @@ export class GameMap {
         source,
         position,
         this.tileSize,
-        this.scale
-        // this.camera
+        this.scale,
+        this.camera
       )
     );
   }

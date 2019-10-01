@@ -1,3 +1,4 @@
+import { createVector } from './../utils';
 import { TextureManager } from '../managers/TextureManager';
 import { Vector, Rect, Canvas } from '../_types';
 import { Component } from '../Component';
@@ -12,7 +13,8 @@ export class TileComponent extends Component {
     private source: Rect,
     private position: Vector,
     private tileSize: number,
-    private tileScale: number
+    private tileScale: number,
+    private camera: Rect
   ) {
     super();
 
@@ -24,7 +26,11 @@ export class TileComponent extends Component {
   }
 
   update() {
-    this.destination = repositionRect(this.position, this.destination);
+    const nextPosition = createVector(
+      this.position.x - this.camera.x,
+      this.position.y - this.camera.y
+    );
+    this.destination = repositionRect(nextPosition, this.destination);
   }
 
   initialize() {}

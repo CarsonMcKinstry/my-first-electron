@@ -1,5 +1,5 @@
 import { compose } from 'lodash/fp';
-import { createAnimation, scaleRect } from './../utils';
+import { createAnimation, scaleRect, createVector } from './../utils';
 import { TransformComponent } from './TransformComponent';
 import { AssetManager } from '../managers/AssetManager';
 import { Entity } from '../Entity';
@@ -28,6 +28,7 @@ export class SpriteComponent extends Component {
     private textureId: string,
     private assetManager: AssetManager,
     private buffer: Canvas,
+    private camera: Rect,
     private animationOptions?: AnimationOptions
   ) {
     super();
@@ -108,9 +109,18 @@ export class SpriteComponent extends Component {
       this.sourceRect
     );
 
+    const destinationReposition = createVector(
+      this.isFixed
+        ? this.transform.position.x
+        : this.transform.position.x - this.camera.x,
+      this.isFixed
+        ? this.transform.position.y
+        : this.transform.position.y - this.camera.y
+    );
+
     this.destinationRect = compose(
       scaleRect(this.transform.scale),
-      repositionRect(this.transform.position)
+      repositionRect(destinationReposition)
     )(this.destinationRect);
   }
 

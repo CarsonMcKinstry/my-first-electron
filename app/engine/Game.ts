@@ -1,11 +1,15 @@
 import { KeyboardControl } from './components/KeyboardControlComponent';
 import { EntityManager, AssetManager } from './managers';
-import { Canvas, LayerType } from './_types';
-import { createCanvas, createVector } from './utils';
+import { Canvas, LayerType, Rect } from './_types';
+import {
+  createCanvas,
+  createRect,
+  repositionRect,
+  createVector
+} from './utils';
 import { GameMap } from './Map';
 import { Entity } from './Entity';
 import { SpriteComponent, TransformComponent } from './components';
-import { promises as fs } from 'fs';
 
 export class Game {
   private _isRunning: boolean = false;
@@ -18,6 +22,8 @@ export class Game {
   private assetManager: AssetManager;
 
   private player?: Entity;
+
+  private camera: Rect;
 
   constructor(
     private root: HTMLElement,
@@ -33,6 +39,8 @@ export class Game {
     this.root.appendChild(this.screen.canvas);
 
     this.assetManager = new AssetManager(assetBase);
+
+    this.camera = createRect(0, 0, width, height);
   }
 
   public get isRunning() {
@@ -66,11 +74,12 @@ export class Game {
 
       const gamemap = new GameMap(
         'map-tiletexture',
-        1,
+        2,
         map.tileSize,
         this.entityManager,
         this.assetManager,
-        this.buffer
+        this.buffer,
+        this.camera
       );
 
       await gamemap.loadMap(`${this.assetBase}/${map.tileMap}`);
@@ -93,6 +102,7 @@ export class Game {
           'player-texture',
           this.assetManager,
           this.buffer,
+          this.camera,
           {
             numFrames: player.sprite.numFrames,
             animationSpeed: player.sprite.animationSpeed,
@@ -107,10 +117,6 @@ export class Game {
         new KeyboardControl('UP', 'DOWN', 'LEFT', 'RIGHT', this.player)
       );
     }
-
-    // this.player.addComponent(
-    //   new KeyboardControl('UP', 'DOWN', 'LEFT', 'RIGHT', this.player)
-    // );
   }
 
   calculateDeltaTime(ticks: number) {
@@ -140,8 +146,28 @@ export class Game {
         this.width,
         this.height
       );
-      // this.handleCameraMovement
+      this.handleCameraMovement();
     }, this.frameRateTargetTime);
+  }
+
+  private handleCameraMovement() {
+    if (this.player) {
+      const playerTransform = this.player.getComponent(
+        'TransformComponent'
+      ) as TransformComponent;
+
+      let playerX = playerTransform.position.x - this.width / 2;
+      let playerY = playerTransform.position.y - this.height / 2;
+
+      playerX = playerX < 0 ? 0 : playerX;
+      playerY = playerY < 0 ? 0 : playerY;
+
+      playerX = playerX > this.camera.w ? this.camera.w : playerX;
+      playerY = playerY > this.camera.h ? this.camera.h : playerY;
+      const newPosition = createVector(playerX, playerY);
+
+      this.camera = repositionRect(newPosition, this.camera);
+    }
   }
 
   private render() {
