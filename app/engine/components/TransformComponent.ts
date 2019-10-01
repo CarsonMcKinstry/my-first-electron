@@ -21,6 +21,10 @@ export class TransformComponent extends Component {
     return this.vel;
   }
 
+  set velocity(v) {
+    this.vel = v;
+  }
+
   initialize() {}
 
   update(

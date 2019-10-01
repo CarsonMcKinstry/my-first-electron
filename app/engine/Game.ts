@@ -1,3 +1,4 @@
+import { KeyboardControl } from './components/KeyboardControlComponen';
 import { EntityManager, AssetManager } from './managers';
 import { Canvas, LayerType } from './_types';
 import { createCanvas, createVector } from './utils';
@@ -94,6 +95,10 @@ export class Game {
           animationNames: ['DOWN', 'RIGHT', 'LEFT', 'UP']
         }
       )
+    );
+
+    this.player.addComponent(
+      new KeyboardControl('UP', 'DOWN', 'LEFT', 'RIGHT', this.player)
     );
   }
 

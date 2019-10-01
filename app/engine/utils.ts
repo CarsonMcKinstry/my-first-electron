@@ -34,17 +34,30 @@ interface OptionalVector {
 }
 
 export const repositionRect = curry((newPosition: OptionalVector, r: Rect) => {
-  return {
-    ...r,
-    ...newPosition
+  const nextRect = {
+    ...r
   };
+  if (newPosition.x !== undefined) {
+    nextRect.x = newPosition.x;
+  }
+  if (newPosition.y !== undefined) {
+    nextRect.y = newPosition.y;
+  }
+  return nextRect;
 });
+
 export const repositionVector = curry(
   (newPosition: OptionalVector, r: Vector) => {
-    return {
-      ...r,
-      ...newPosition
+    const nextVector = {
+      ...r
     };
+    if (newPosition.x !== undefined) {
+      nextVector.x = newPosition.x;
+    }
+    if (newPosition.y !== undefined) {
+      nextVector.y = newPosition.y;
+    }
+    return nextVector;
   }
 );
 
