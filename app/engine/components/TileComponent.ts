@@ -30,6 +30,7 @@ export class TileComponent extends Component {
       this.position.x - this.camera.x,
       this.position.y - this.camera.y
     );
+
     this.destination = repositionRect(nextPosition, this.destination);
   }
 

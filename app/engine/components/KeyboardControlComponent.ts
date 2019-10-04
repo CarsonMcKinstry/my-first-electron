@@ -95,7 +95,6 @@ export class KeyboardControl extends Component {
             { x, y },
             this.transform.velocity
           );
-          console.log(this.transform.velocity);
         })
       )
       .subscribe();

@@ -59,7 +59,6 @@ export class SpriteComponent extends Component {
         });
 
         this.currentAnimationName = animationOptions.animationNames[0];
-        console.log(this.currentAnimationName);
       }
 
       this.animationIndex = 0;

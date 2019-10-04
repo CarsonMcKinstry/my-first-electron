@@ -164,6 +164,7 @@ export class Game {
 
       playerX = playerX > this.camera.w ? this.camera.w : playerX;
       playerY = playerY > this.camera.h ? this.camera.h : playerY;
+
       const newPosition = createVector(playerX, playerY);
 
       this.camera = repositionRect(newPosition, this.camera);
