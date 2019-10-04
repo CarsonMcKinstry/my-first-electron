@@ -25,10 +25,16 @@ export class TileComponent extends Component {
     };
   }
 
-  update() {
+  update(
+    deltaTime: number,
+    ticks: number,
+    gameWidth: number,
+    gameHeight: number,
+    camera: Rect
+  ) {
     const nextPosition = createVector(
-      this.position.x - this.camera.x,
-      this.position.y - this.camera.y
+      this.position.x - camera.x,
+      this.position.y - camera.y
     );
 
     this.destination = repositionRect(nextPosition, this.destination);

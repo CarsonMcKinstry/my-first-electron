@@ -1,4 +1,4 @@
-import { LayerType, Canvas } from './_types';
+import { LayerType, Canvas, Rect } from './_types';
 // import { EntityManager } from './managers/EntityManager';
 import { Component } from './Component';
 
@@ -32,10 +32,11 @@ export class Entity {
     deltaTime: number,
     ticks: number,
     gameWidth: number,
-    gameHeight: number
+    gameHeight: number,
+    camera: Rect
   ): void {
     for (const component of this.components.values()) {
-      component.update(deltaTime, ticks, gameWidth, gameHeight);
+      component.update(deltaTime, ticks, gameWidth, gameHeight, camera);
     }
   }
 

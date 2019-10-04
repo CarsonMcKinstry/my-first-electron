@@ -88,7 +88,8 @@ export class SpriteComponent extends Component {
     deltaTime: number,
     currentTime: number,
     gameWidth: number,
-    gameHeight: number
+    gameHeight: number,
+    camera: Rect
   ) {
     if (this.isAnimated) {
       const s = Math.floor(currentTime / this.animationSpeed) % this.numFrames;
@@ -107,19 +108,18 @@ export class SpriteComponent extends Component {
       },
       this.sourceRect
     );
-
     const destinationReposition = createVector(
       this.isFixed
         ? this.transform.position.x
-        : this.transform.position.x - this.camera.x,
+        : this.transform.position.x - camera.x,
       this.isFixed
         ? this.transform.position.y
-        : this.transform.position.y - this.camera.y
+        : this.transform.position.y - camera.y
     );
 
     this.destinationRect = compose(
-      scaleRect(this.transform.scale),
-      repositionRect(destinationReposition)
+      repositionRect(destinationReposition),
+      scaleRect(this.transform.scale)
     )(this.destinationRect);
   }
 

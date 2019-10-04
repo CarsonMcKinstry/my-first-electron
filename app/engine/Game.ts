@@ -144,7 +144,8 @@ export class Game {
         this.deltaTime,
         this.lastTicks,
         this.width,
-        this.height
+        this.height,
+        this.camera
       );
       this.handleCameraMovement();
     }, this.frameRateTargetTime);

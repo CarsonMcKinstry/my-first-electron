@@ -1,4 +1,4 @@
-import { Canvas, LayerType } from '../_types';
+import { Canvas, LayerType, Rect } from '../_types';
 import { Entity } from '../Entity';
 
 export class EntityManager {
@@ -52,16 +52,17 @@ export class EntityManager {
     deltaTime: number,
     ticks: number,
     gameWidth: number,
-    gameHeight: number
+    gameHeight: number,
+    camera: Rect
   ): void {
     for (const [_, entity] of this.entities) {
-      entity.update(deltaTime, ticks, gameWidth, gameHeight);
+      entity.update(deltaTime, ticks, gameWidth, gameHeight, camera);
     }
   }
 
   public render(buffer: Canvas): void {
     for (const layer of Object.values(LayerType)) {
-      const entities = this.getEntitiesBylayer(layer);
+      const entities = this.getEntitiesBylayer(layer as LayerType);
 
       for (const entity of entities) {
         entity.render(buffer);
